@@ -1,0 +1,22 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+textarea {
+  width: calc(100% - 14px);
+  height: 240px;
+  resize: none;
+  border-radius: 7px;
+  padding: 6px;
+  outline: none;
+}
+
+input[type=submit] {
+  border: 1px solid #555;
+  font-size: 20px;
+  border-radius: 7px;
+  width: 100%;
+  height: 30px;
+  outline: none;
+  margin-top: 20px;
+}
