@@ -1,6 +1,14 @@
+/*
+  Add shift amount indicators,
+  Better listing,
+  Better style,
+  Language-selector
+*/
+
 const range = 26; // A-Z + ÄÖÜ
 const first = 65; // A
 
+// German
 const languageProfile = {
   E: 17.40,
   N: 9.78,
