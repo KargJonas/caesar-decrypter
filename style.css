@@ -20,3 +20,18 @@ input[type=submit] {
   outline: none;
   margin-top: 20px;
 }
+
+#outputs {
+  padding: 5px 10px;
+  border: 1px solid #555;
+  border-radius: 7px;
+}
+
+#language div {
+  display: flex;
+}
+
+#root {
+  max-width: 500px;
+  margin: 0 auto;
+}

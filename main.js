@@ -8,15 +8,26 @@
 const range = 26; // A-Z + ÄÖÜ
 const first = 65; // A
 
-// German
-const languageProfile = {
-  E: 17.40,
-  N: 9.78,
-  I: 7.55,
-  S: 7.27,
-  R: 7.00,
-  A: 6.51
-};
+const languages = [
+  ["German", {
+    E: 17.40,
+    N: 9.78,
+    I: 7.55,
+    S: 7.27,
+    R: 7.00,
+    A: 6.51
+  }],
+  ["English", {
+    E: 12.70,
+    T: 9.06,
+    A: 8.17,
+    O: 7.51,
+    I: 6.97,
+    N: 6.75
+  }]
+];
+
+let languageProfile = languages[0][1];
 
 function App() {
   return (
@@ -27,13 +38,20 @@ function App() {
         <input type="submit" />
       </form>
 
-      <h1>Output</h1>
-      <textarea $bind={{ value: "combinations" }} />
+      <hr />
+      <h1>Output (Most likely first):</h1>
+      <div id="outputs" />
     </div>
   );
 }
 
 Modular.render(App, "#root");
+
+function languageChange() {
+  const index = Modular.getBinding("language");
+  console.log(index);
+  languageProfile = languages[index][0];
+}
 
 function submit(e) {
   e.preventDefault();
@@ -47,7 +65,17 @@ function submit(e) {
 
   Modular.setBinding("input", input);
 
-  Modular.setBinding("combinations", getLikelinessRanking(getCombinations(input)).join("\n-----\n"));
+  Modular.render(Outputs(getLikelinessRanking(getCombinations(input))),
+    "#outputs");
+}
+
+function Outputs(items) {
+  const elements = items.map(item => <li>{item}</li>);
+  return (
+    <ol>
+      {elements}
+    </ol>
+  );
 }
 
 function shiftChar(character, offset) {
@@ -112,11 +140,19 @@ function getDifference(chars) {
 
 function getLikelinessRanking(combinations) {
   let leaderBoard = {};
-  const res = [];
 
   combinations.map(combination => {
-    leaderBoard[getDifference(getOccurrence(combination))] = combination;
+    const val = getDifference(getOccurrence(combination));
+
+    if (!leaderBoard[val]) {
+      leaderBoard[val] = [];
+    }
+
+    leaderBoard[val].push(combination);
   });
 
-  return Object.entries(leaderBoard).sort((a, b) =>  a[0] - b[0]).map(item => item[1]);
+  const res = [];
+  Object.entries(leaderBoard).map(items => items[1].map(item => res.push(item)));
+
+  return res.sort((a, b) => a - b).map(item => item);
 }
