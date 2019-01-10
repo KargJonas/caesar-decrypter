@@ -61,6 +61,7 @@ function submit(e) {
     .replace("Ö", "OE")
     .replace("Ä", "AE")
     .replace("Ü", "UE")
+    .replace("ß", "SS")
     .replace(/[^\w\ ]/g, "");
 
   Modular.setBinding("input", input);
@@ -71,11 +72,7 @@ function submit(e) {
 
 function Outputs(items) {
   const elements = items.map(item => <li>{item}</li>);
-  return (
-    <ol>
-      {elements}
-    </ol>
-  );
+  return <ol>{elements}</ol>;
 }
 
 function shiftChar(character, offset) {
@@ -91,15 +88,13 @@ function shiftString(text, offset) {
 
 function getCombinations(text) {
   const words = text.split(" ").filter(item => item.trim());
-
   const combinations = [];
 
   for (let i = 1; i <= range; i++) {
-    combinations.push(
-      words
-        .map(word => shiftString(word, i))
-        .join(" ")
-    );
+    combinations.push({
+      value: words.map(word => shiftString(word, i)).join(" "),
+      offset: i - 13
+    });
   }
 
   return combinations;
@@ -123,8 +118,6 @@ function getOccurrence(_text) {
     });
   });
 
-
-
   return res;
 }
 
@@ -139,20 +132,13 @@ function getDifference(chars) {
 }
 
 function getLikelinessRanking(combinations) {
-  let leaderBoard = {};
+  const ranking = combinations.map(combination => ({
+    likeliness: getDifference(getOccurrence(combination.value)),
+    offset: combination.offset,
+    value: combination.value
+  })).sort((a, b) => a.likeliness - b.likeliness);
 
-  combinations.map(combination => {
-    const val = getDifference(getOccurrence(combination));
+  console.log(ranking);
 
-    if (!leaderBoard[val]) {
-      leaderBoard[val] = [];
-    }
-
-    leaderBoard[val].push(combination);
-  });
-
-  const res = [];
-  Object.entries(leaderBoard).map(items => items[1].map(item => res.push(item)));
-
-  return res.sort((a, b) => a - b).map(item => item);
+  return ranking.map(combination => `(${combination.offset > 0 ? "+" : ""}${combination.offset}) ${combination.value}`);
 }
