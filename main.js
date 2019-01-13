@@ -85,7 +85,7 @@ function getCombinations(text) {
   for (let i = 1; i <= range; i++) {
     combinations.push({
       value: words.map(word => shiftString(word, i)).join(" "),
-      offset: i - 13
+      // offset: i - 13
     });
   }
 
@@ -126,9 +126,10 @@ function getDifference(chars) {
 function getLikelinessRanking(combinations) {
   const ranking = combinations.map(combination => ({
     likeliness: getDifference(getOccurrence(combination.value)),
-    offset: combination.offset,
+    // offset: combination.offset,
     value: combination.value
   })).sort((a, b) => a.likeliness - b.likeliness);
 
-  return ranking.map(combination => `(${ combination.offset }) ${ combination.value }`);
+  // return ranking.map(combination => `(${ combination.offset }) ${ combination.value }`);
+  return ranking.map(combination => combination.value);
 }
