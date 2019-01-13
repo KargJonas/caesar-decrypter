@@ -1,11 +1,4 @@
-/*
-  Add shift amount indicators,
-  Better listing,
-  Better style,
-  Language-selector
-*/
-
-const range = 26; // A-Z + ÄÖÜ
+const range = 26; // A-Z
 const first = 65; // A
 
 const languages = [
@@ -17,14 +10,14 @@ const languages = [
     R: 7.00,
     A: 6.51
   }],
-  ["English", {
-    E: 12.70,
-    T: 9.06,
-    A: 8.17,
-    O: 7.51,
-    I: 6.97,
-    N: 6.75
-  }]
+  // ["English", {
+  //   E: 12.70,
+  //   T: 9.06,
+  //   A: 8.17,
+  //   O: 7.51,
+  //   I: 6.97,
+  //   N: 6.75
+  // }]
 ];
 
 let languageProfile = languages[0][1];
@@ -32,14 +25,14 @@ let languageProfile = languages[0][1];
 function App() {
   return (
     <div>
-      <h1>Input:</h1>
+      <h1>Eingabe:</h1>
       <form onsubmit={submit}>
-        <textarea $bind={{ value: "input" }} />
+        <textarea $bind={{ value: "input" }}/>
         <input type="submit" />
       </form>
 
       <hr />
-      <h1>Output (Most likely first):</h1>
+      <h1>Ausgabe (Wahrscheinlichste zuerst):</h1>
       <div id="outputs" />
     </div>
   );
@@ -49,7 +42,6 @@ Modular.render(App, "#root");
 
 function languageChange() {
   const index = Modular.getBinding("language");
-  console.log(index);
   languageProfile = languages[index][0];
 }
 
@@ -138,7 +130,5 @@ function getLikelinessRanking(combinations) {
     value: combination.value
   })).sort((a, b) => a.likeliness - b.likeliness);
 
-  console.log(ranking);
-
-  return ranking.map(combination => `(${combination.offset > 0 ? "+" : ""}${combination.offset}) ${combination.value}`);
+  return ranking.map(combination => `(${ combination.offset }) ${ combination.value }`);
 }
