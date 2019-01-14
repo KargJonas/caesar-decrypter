@@ -9,15 +9,7 @@ const languages = [
     S: 7.27,
     R: 7.00,
     A: 6.51
-  }],
-  // ["English", {
-  //   E: 12.70,
-  //   T: 9.06,
-  //   A: 8.17,
-  //   O: 7.51,
-  //   I: 6.97,
-  //   N: 6.75
-  // }]
+  }]
 ];
 
 let languageProfile = languages[0][1];
@@ -26,13 +18,10 @@ function App() {
   return (
     <div>
       <h1>Eingabe:</h1>
-      <form onsubmit={submit}>
-        <textarea $bind={{ value: "input" }}/>
-        <input type="submit" />
-      </form>
+      <textarea $bind={{ value: "input" }} />
 
       <hr />
-      <h1>Ausgabe (Wahrscheinlichste zuerst):</h1>
+      <h1>Ausgabe (Wahrscheinlichkeit):</h1>
       <div id="outputs" />
     </div>
   );
@@ -45,9 +34,8 @@ function languageChange() {
   languageProfile = languages[index][0];
 }
 
-function submit(e) {
-  e.preventDefault();
-  const input = Modular.getBinding("input")
+Modular.listenBinding("input", value => {
+  const input = value
     .toUpperCase()
     .replace(/\s+/g, " ")
     .replace("Ö", "OE")
@@ -60,7 +48,7 @@ function submit(e) {
 
   Modular.render(Outputs(getLikelinessRanking(getCombinations(input))),
     "#outputs");
-}
+});
 
 function Outputs(items) {
   const elements = items.map(item => <li>{item}</li>);
